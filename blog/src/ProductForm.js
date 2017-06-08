@@ -8,7 +8,7 @@ class ProductForm extends Component {
 		super(props);
 		this.state = {
 			product : Object.assign({}, RESET_VALUES),
-			errors: { name: 'name vide'}
+			errors: {}
 		}
 		this.handleContent = this.handleContent.bind(this);
 		this.handleRecord = this.handleRecord.bind(this);
@@ -30,12 +30,14 @@ class ProductForm extends Component {
 
 			return {product : product}
 		});
-		console.log(this.state.errors);
 	}
 	handleRecord(e) {
 		// On le met au début car tout peut arriver !
 		e.preventDefault();
+		this.required('name', this.state.product.name);
 
+		console.log(this.state.errors);
+		console.log(Object.keys(this.state.errors).length);
 		if (Object.keys(this.state.errors).length !== 0) {
 			return;
 		}
@@ -43,15 +45,26 @@ class ProductForm extends Component {
 		this.props.onSave(this.state.product);
 		this.setState({
 			product : Object.assign({}, RESET_VALUES),
-			errors: { name: 'name vide'}
+			errors: { }
 		});
 	}
 	required(field, value) {
 		if (value === '') {
-			this.state.errors[field] = field + " vide";
+			this.setState( (prevState) => {
+				let errors = prevState.errors;
+				errors[field] = field + " vide";
+				console.log("Errors : " + errors)
+				console.log(errors)
+				return { errors : errors }
+			});
 		} else {
 			if (typeof this.state.errors[field] !== 'undefined') {
-				delete this.state.errors[field];
+				this.setState( (prevState) => {
+					let errors = prevState.errors;
+					delete errors[field];
+
+					return { errors : errors }
+				});
 			}
 		}
 	}
