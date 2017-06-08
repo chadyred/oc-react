@@ -1,0 +1,23 @@
+version: '2'
+services:
+  front:
+    image: nginx
+    volumes:
+        - "./blog:/home/docker:ro"
+        - "./docker/front/react.conf:/etc/nginx/conf.d/react.conf:ro"
+        - "./docker/front/nginx.conf:/etc/nginx/nginx.conf:rw"
+    environment:
+        - VIRTUAL_HOST=DOMAIN.TLD,www.DOMAIN.TLD
+    networks:
+          - default
+          - nginx-proxy
+  node:
+    user: ${USER_ID}
+    build: ./docker/node-react-tuto-oc
+    volumes:
+        - ".:/home/docker:rw"
+
+networks:
+    nginx-proxy:
+        external:
+            name: proxy-nginx
