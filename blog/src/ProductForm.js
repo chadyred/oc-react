@@ -8,7 +8,7 @@ class ProductForm extends Component {
 		super(props);
 		this.state = {
 			product : Object.assign({}, RESET_VALUES),
-			errors: {}
+			errors: { name: "Name vide"}
 		}
 		this.handleContent = this.handleContent.bind(this);
 		this.handleRecord = this.handleRecord.bind(this);
@@ -33,28 +33,24 @@ class ProductForm extends Component {
 	}
 	handleRecord(e) {
 		// On le met au début car tout peut arriver !
-		e.preventDefault();
+		// Bien initialiser a ec une erreur sans quoi c'est fail avec l'asynchrone !
 		this.required('name', this.state.product.name);
 
-		console.log(this.state.errors);
-		console.log(Object.keys(this.state.errors).length);
-		if (Object.keys(this.state.errors).length !== 0) {
-			return;
+		if (Object.keys(this.state.errors).length === 0) {
+			this.props.onSave(this.state.product);
+			this.setState({
+				product : Object.assign({}, RESET_VALUES),
+				errors: { }
+			});
 		}
+		e.preventDefault();
 
-		this.props.onSave(this.state.product);
-		this.setState({
-			product : Object.assign({}, RESET_VALUES),
-			errors: { }
-		});
 	}
 	required(field, value) {
 		if (value === '') {
 			this.setState( (prevState) => {
 				let errors = prevState.errors;
 				errors[field] = field + " vide";
-				console.log("Errors : " + errors)
-				console.log(errors)
 				return { errors : errors }
 			});
 		} else {
