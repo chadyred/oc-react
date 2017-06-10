@@ -33,7 +33,7 @@ class ProductForm extends Component {
 	}
 	handleRecord(e) {
 		// On le met au début car tout peut arriver !
-		// Bien initialiser a ec une erreur sans quoi c'est fail avec l'asynchrone !
+		// Bien initialiser a ec une erreur sans quoi c'est fail avec l'asynchrone (voir les Promises) !
 		this.required('name', this.state.product.name);
 
 		if (Object.keys(this.state.errors).length === 0) {
@@ -45,6 +45,16 @@ class ProductForm extends Component {
 		}
 		e.preventDefault();
 
+	}
+	// Component change on parent ? All props given are receive here and allow use to add to our state.
+	// THE WHOLE PROPERTY ARE PASSED IN. WE HAVE TO CHECK THE BEHAVIOUR OF WHAT WE WANT.
+	componentWillReceiveProps(nextProps) {
+		console.log("Props change : receive")
+		console.log(nextProps.editProduct);
+		if (Object.keys(nextProps.editProduct).length !== 0) {
+			this.required('name', nextProps.editProduct.name);
+			this.setState({product: nextProps.editProduct});
+		}
 	}
 	required(field, value) {
 		if (value === '') {
@@ -85,7 +95,12 @@ class ProductForm extends Component {
 				<div>
 					<label htmlFor="ProductForm-category">
 						Category :
-						<input type="text" id="ProductForm-category" onChange={this.handleContent} name="category" value={this.state.product.category}/>
+						<input
+							type="text"
+							id="ProductForm-category"
+							onChange={this.handleContent}
+							name="category" value={this.state.product.category}
+						/>
 					</label>
 				</div>
 				<div>
@@ -102,11 +117,17 @@ class ProductForm extends Component {
 				</div>
 				<div>
 					<label htmlFor="ProductForm-stocked">
-						<input type="checkbox" id="ProductForm-stocked" name="stocked" onChange={this.handleContent} value={this.state.product.stocked}/> En stock ?
+						<input type="checkbox"
+								id="ProductForm-stocked"
+								name="stocked"
+								onChange={this.handleContent}
+								checked={this.state.product.stocked === true ? "checked" : ""}
+						/>
+							En stock ?
 					</label>
 				</div>
 				<div>
-					<input type="submit" onClick={this.handleRecord} value="Ajouter produit"/>
+					<input type="submit" onClick={this.handleRecord} value={this.state.product.id ? "Modifier le produit" : "Ajouter le produit"}/>
 				</div>
 			</form>
 		)

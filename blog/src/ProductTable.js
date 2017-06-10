@@ -53,7 +53,7 @@ class ProductTable extends Component {
         		return;
         	}
 
-      		rows.push(<ProductTableRow product={product} key={product.id} onDelete={this.props.onDelete}></ProductTableRow>);
+      		rows.push(<ProductTableRow product={product} key={product.id} onDelete={this.props.onDelete} onEdit={this.props.handleEdit}></ProductTableRow>);
 		});
 
 		return rows;

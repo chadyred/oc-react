@@ -4,9 +4,13 @@ class ProductTableRow extends Component{
 	constructor(props) {
 		super(props);
 		this.destroy = this.destroy.bind(this);
+		this.edit = this.edit.bind(this);
 	}
 	destroy(e){
 		this.props.onDelete(this.props.product.id, e);
+	}
+	edit(e){
+		this.props.onEdit(this.props.product.id, e);
 	}
 	render () {
 		return (
@@ -25,6 +29,9 @@ class ProductTableRow extends Component{
 					</td>
 					<td>
 						<span onClick={this.destroy} style={ {'color': 'red', 'cursor' : 'pointer'} }>X</span>
+					</td>
+					<td>
+						<span onClick={this.edit} style={ {'color': 'green', 'cursor' : 'pointer'} }>E</span>
 					</td>
 				</tr>
 		)

@@ -66,18 +66,21 @@ class Products extends Component {
         this.state = {
             products: PRODUCTS,
             filterText: '',
-            inStockOnly: false
+            inStockOnly: false,
+            editProduct: {}
         }
         this.handleFilter = this.handleFilter.bind(this);
         this.handleSave = this.handleSave.bind(this);
+        this.handleEdit = this.handleEdit.bind(this);
         this.handleDelete = this.handleDelete.bind(this);
     }
     handleSave(product) {
-        let id = new Date().getTime();
+        let id = product.id ? product.id : new Date().getTime();
         product.id = id;
         this.setState((prevState, props) => {
             let products = prevState.products;
             products[id] = product;
+
             // Peut être abrégé : return { products }
             return { products : products}
         });
@@ -97,6 +100,14 @@ class Products extends Component {
             return {products : products}
         });
     }
+    handleEdit(id, e=null) {
+        // Permet de récupérer l'élément en cours d'édition
+        this.setState((prevState, props) => {
+            let products = prevState.products;
+            let editProduct = products[id];
+            return {editProduct : editProduct}
+        });
+    }
     render() {
         return (
             <div className="Products">
@@ -111,8 +122,12 @@ class Products extends Component {
                     inStockOnly={this.state.inStockOnly}
                     updateProducts={this.orderColumn}
                     onDelete={this.handleDelete}
+                    handleEdit={this.handleEdit}
                 ></ProductTable>
-                <ProductForm onSave={this.handleSave}></ProductForm>
+                <ProductForm
+                    onSave={this.handleSave}
+                    editProduct={this.state.editProduct}
+                ></ProductForm>
             </div>
         )
     }
